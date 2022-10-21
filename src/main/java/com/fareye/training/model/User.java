@@ -5,23 +5,21 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.mindrot.jbcrypt.BCrypt;
 
-import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Getter @Setter @NoArgsConstructor
 public class User {
-    @NotNull
+
     private String firstName;
     private String lastName;
-    @NotNull
+
     private String email;
     private boolean verified;
-    private LocalDateTime created;
-    private LocalDateTime modified;
-    @NotNull
+    private String created;
+    private String modified;
+
     private String password;
     private String hashedPassword;
-    @NotNull
     private String role;
     private boolean active;
 
@@ -37,12 +35,12 @@ public class User {
     public void setCreated() {
         if(this.created==null){
             LocalDateTime createdDate= LocalDateTime.now();
-            this.created = createdDate;
+            this.created = createdDate.toString();
         }
     }
 
     public void setModified() {
-        this.modified = LocalDateTime.now();
+        this.modified = LocalDateTime.now().toString();
     }
 
     public void setHashedPassword() {this.hashedPassword = hashPassword(this.password);}
@@ -67,5 +65,9 @@ public class User {
                 ", role='" + role + '\'' +
                 ", active=" + active +
                 '}';
+    }
+
+    public long add(long a, long b){
+        return a+b;
     }
 }

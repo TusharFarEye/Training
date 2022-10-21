@@ -9,16 +9,16 @@ import java.time.LocalDateTime;
 
 @Getter @Setter @NoArgsConstructor
 public class ToDo {
-    @NotNull
+
     private LocalDateTime dueDate;
     private LocalDateTime createdDate;
     private LocalDateTime modifiedDate;
-    @NotNull
+
     private String body;
-    @NotNull
+
     private String title;
     private boolean status;
-    @NotNull
+
     private User user;
 
     public void setBody(String _body) {

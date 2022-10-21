@@ -8,25 +8,27 @@ import java.util.List;
 import java.util.Objects;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:3000")
 public class UserController {
     List<User> users = new ArrayList<User>();
 
     @GetMapping("/get-user")
-    public User getUserByEmail(@RequestParam String email){
-        User currUser = new User();
-        for(int i=0;i<users.size();i++){
-            if(email.equals(users.get(i).getEmail())){
-                currUser = users.get(i);
-            }
-        }
-        return currUser;
+    public List<User> getUser(){
+//        String email = user.getEmail();
+//        User currUser = new User();
+//        for(int i=0;i<users.size();i++){
+//            if(email.equals(users.get(i).getEmail())){
+//                currUser = users.get(i);
+//            }
+//        }
+        return users;
     }
 
     @PostMapping("/post-user")
-    public List<User> createUser(@RequestBody User user){
+    public User createUser(@RequestBody User user){
         users.add(user);
         System.out.println("User added successfully!");
-        return users;
+        return user;
     }
 
     @PutMapping("/put-user")
@@ -43,6 +45,7 @@ public class UserController {
 
     @DeleteMapping("/delete-user")
     public List<User> deleteUser(@RequestParam String email){
+        System.out.println("delete request successfull!");
         for(int i=0;i<users.size();i++){
             if(Objects.equals(email, users.get(i).getEmail())){
                 users.remove(i);
