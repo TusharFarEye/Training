@@ -5,12 +5,13 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.mindrot.jbcrypt.BCrypt;
 
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Getter @Setter @NoArgsConstructor
 public class User {
-
     private String firstName;
+    @NotNull
     private String lastName;
 
     private String email;
@@ -67,7 +68,4 @@ public class User {
                 '}';
     }
 
-    public long add(long a, long b){
-        return a+b;
-    }
 }

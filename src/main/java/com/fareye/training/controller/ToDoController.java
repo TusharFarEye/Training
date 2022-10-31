@@ -2,7 +2,6 @@ package com.fareye.training.controller;
 
 import com.fareye.training.model.ToDo;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -13,7 +12,7 @@ import java.util.Objects;
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
 public class ToDoController {
-    List<ToDo> toDoList = new ArrayList<>();
+    static public List<ToDo> toDoList = new ArrayList<>();
 
     @GetMapping("/get-todo")
     public List<ToDo>  getToDoList(@RequestParam String email){
@@ -28,7 +27,9 @@ public class ToDoController {
 
     @PostMapping("/post-todo")
     public List<ToDo> createToDoList(@RequestBody @Valid ToDo toDo, BindingResult bindingResult){
-        bindingResult.hasErrors();
+        if(bindingResult.hasErrors()){
+            throw new IllegalArgumentException("invalid title for same user");
+        }
         toDoList.add(toDo);
         System.out.println("Todo List added successfully!");
         return toDoList;

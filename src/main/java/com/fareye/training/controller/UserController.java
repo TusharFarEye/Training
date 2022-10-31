@@ -1,8 +1,11 @@
 package com.fareye.training.controller;
 
 import com.fareye.training.model.User;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -10,10 +13,10 @@ import java.util.Objects;
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
 public class UserController {
-    List<User> users = new ArrayList<User>();
+    static List<User> users = new ArrayList<User>();
 
     @GetMapping("/get-user")
-    public List<User> getUser(){
+    public static List<User> getUser(){
 //        String email = user.getEmail();
 //        User currUser = new User();
 //        for(int i=0;i<users.size();i++){
@@ -25,7 +28,10 @@ public class UserController {
     }
 
     @PostMapping("/post-user")
-    public User createUser(@RequestBody User user){
+    public User createUser(@RequestBody @Valid User user, BindingResult bindingResult){
+        if(bindingResult.hasErrors()){
+            throw new IllegalArgumentException("illegal arguments");
+        }
         users.add(user);
         System.out.println("User added successfully!");
         return user;
