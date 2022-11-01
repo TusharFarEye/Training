@@ -1,6 +1,9 @@
 package com.fareye.training.controller;
 
 import com.fareye.training.model.ToDo;
+import com.fareye.training.repository.ToDoRepository;
+import com.fareye.training.service.ToDoService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,19 +13,15 @@ import java.util.List;
 import java.util.Objects;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
+//@CrossOrigin(origins = "http://localhost:3000")
 public class ToDoController {
     static public List<ToDo> toDoList = new ArrayList<>();
 
+    @Autowired
+    ToDoService toDoService;
     @GetMapping("/get-todo")
-    public List<ToDo>  getToDoList(@RequestParam String email){
-        List<ToDo> toDoListUser = new ArrayList<>();
-        for(int i=0;i<toDoList.size();i++){
-            if(Objects.equals(toDoList.get(i).getUser().getEmail(), email)){
-                toDoListUser.add(toDoList.get(i));
-            }
-        }
-        return toDoListUser;
+    public List<ToDo>  getToDoList(@RequestParam Integer todoId){
+        return toDoService.getAllToDos();
     }
 
     @PostMapping("/post-todo")
@@ -30,6 +29,7 @@ public class ToDoController {
         if(bindingResult.hasErrors()){
             throw new IllegalArgumentException("invalid title for same user");
         }
+        toDoService.addToDo(toDo);
         toDoList.add(toDo);
         System.out.println("Todo List added successfully!");
         return toDoList;
@@ -38,7 +38,7 @@ public class ToDoController {
     @PutMapping("/put-todo")
     public List<ToDo> putToDoList(@RequestBody ToDo todo){
         for(int i=0;i<toDoList.size();i++){
-            if(todo.getUser().getEmail().equals(toDoList.get(i).getUser().getEmail())   &&   todo.getTitle().equals(toDoList.get(i).getTitle())){
+            if(todo.getUserId().equals(toDoList.get(i).getUserId())   &&   todo.getTitle().equals(toDoList.get(i).getTitle())){
                 toDoList.set(i, todo);
                 System.out.println("Successfully updated todoList!");
                 break;
@@ -48,9 +48,9 @@ public class ToDoController {
     }
 
     @DeleteMapping("/delete-todo")
-    public List<ToDo> deleteToDoList(@RequestParam String email, @RequestParam String title){
+    public List<ToDo> deleteToDoList(@RequestParam Integer userId, @RequestParam String title){
         for(int i=0;i<toDoList.size();i++){
-            if(email.equals(toDoList.get(i).getUser().getEmail())   &&   title.equals(toDoList.get(i).getTitle())){
+            if(userId.equals(toDoList.get(i).getUserId())   &&   title.equals(toDoList.get(i).getTitle())){
                 toDoList.remove(i);
                 System.out.println("Successfully deleted todoList!");
                 break;

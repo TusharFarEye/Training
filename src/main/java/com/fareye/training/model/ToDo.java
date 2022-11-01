@@ -1,23 +1,31 @@
 package com.fareye.training.model;
 
-import com.fareye.training.annotation.DuplicateTitle;
+//import com.fareye.training.annotation.DuplicateTitle;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
-@Getter @Setter @NoArgsConstructor @DuplicateTitle @Service
+@Getter @Setter @NoArgsConstructor
+//@DuplicateTitle
+@Data
+@Entity
+@Table(name = "todos")
 public class ToDo {
+
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
     private LocalDateTime dueDate;
     private LocalDateTime createdDate;
     private LocalDateTime modifiedDate;
     private String body;
-
     private String title;
     private boolean status;
-    private User user;
+    private Integer userId;
     public void setBody(String _body) {
         body = _body;
         setCreatedDate();
@@ -48,7 +56,7 @@ public class ToDo {
                 ", body='" + body + '\'' +
                 ", title='" + title + '\'' +
                 ", status=" + status +
-                ", user=" + user +
+                ", user=" + userId +
                 '}';
     }
 }

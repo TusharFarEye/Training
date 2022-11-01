@@ -1,19 +1,25 @@
 package com.fareye.training.model;
 
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.mindrot.jbcrypt.BCrypt;
 
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Getter @Setter @NoArgsConstructor
+@Data
+@Entity
+@Table(name = "users")
 public class User {
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
     private String firstName;
     @NotNull
     private String lastName;
-
     private String email;
     private boolean verified;
     private String created;

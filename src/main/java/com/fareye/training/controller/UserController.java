@@ -1,6 +1,8 @@
 package com.fareye.training.controller;
 
 import com.fareye.training.model.User;
+import com.fareye.training.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,28 +13,24 @@ import java.util.List;
 import java.util.Objects;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
+//@CrossOrigin(origins = "http://localhost:3000")
 public class UserController {
     static List<User> users = new ArrayList<User>();
+    @Autowired
+    UserService userService;
 
     @GetMapping("/get-user")
-    public static List<User> getUser(){
-//        String email = user.getEmail();
-//        User currUser = new User();
-//        for(int i=0;i<users.size();i++){
-//            if(email.equals(users.get(i).getEmail())){
-//                currUser = users.get(i);
-//            }
-//        }
-        return users;
+    public List<User> getAllUsers(){
+        return userService.getAllUsers();
     }
 
     @PostMapping("/post-user")
-    public User createUser(@RequestBody @Valid User user, BindingResult bindingResult){
+    public User createUser(@RequestBody  User user, BindingResult bindingResult){
         if(bindingResult.hasErrors()){
             throw new IllegalArgumentException("illegal arguments");
         }
         users.add(user);
+        userService.addUser(user);
         System.out.println("User added successfully!");
         return user;
     }
@@ -40,7 +38,7 @@ public class UserController {
     @PutMapping("/put-user")
     public List<User> putUser(@RequestBody User user){
         for(int i=0;i<users.size();i++){
-            if(user.getEmail().equals(users.get(i).getEmail())){
+            if(user.getId().equals(users.get(i).getId())){
                 users.set(i, user);
                 System.out.println("User updated successfully!");
                 break;
@@ -50,16 +48,19 @@ public class UserController {
     }
 
     @DeleteMapping("/delete-user")
-    public List<User> deleteUser(@RequestParam String email){
+    public List<User> deleteUser(@RequestParam Integer userId){
         System.out.println("delete request successfull!");
-        for(int i=0;i<users.size();i++){
-            if(Objects.equals(email, users.get(i).getEmail())){
-                users.remove(i);
-                System.out.println("User removed successfully!");
-                break;
-            }
-        }
-        System.out.println(users.size());
+
+        userService.deleteUser(userId);
+
+//        for(int i=0;i<users.size();i++){
+//            if(Objects.equals(userId, users.get(i).getId())){
+//                users.remove(i);
+//                System.out.println("User removed successfully!");
+//                break;
+//            }
+//        }
+//        System.out.println("no of users present :" + users.size());
         return users;
     }
 
