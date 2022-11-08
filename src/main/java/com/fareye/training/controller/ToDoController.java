@@ -4,6 +4,8 @@ import com.fareye.training.model.ToDo;
 import com.fareye.training.repository.ToDoRepository;
 import com.fareye.training.service.ToDoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,20 +18,23 @@ import java.util.Objects;
 //@CrossOrigin(origins = "http://localhost:3000")
 public class ToDoController {
     static public List<ToDo> toDoList = new ArrayList<>();
-
     @Autowired
     ToDoService toDoService;
     @GetMapping("/get-todo")
-    public List<ToDo>  getToDoList(@RequestParam Integer todoId){
-        return toDoService.getAllToDos();
+    public List<ToDo>  getToDoList(Authentication authentication){
+        Integer userId = toDoService.getUserIdByUserEmail(authentication.getName());
+        return toDoService.findAllTodosByUserId(userId);
     }
 
     @PostMapping("/post-todo")
-    public List<ToDo> createToDoList(@RequestBody @Valid ToDo toDo, BindingResult bindingResult){
+    public List<ToDo> createToDoList(@RequestBody @Valid ToDo toDo, Authentication authentication, BindingResult bindingResult){
         if(bindingResult.hasErrors()){
             throw new IllegalArgumentException("invalid title for same user");
         }
-        toDoService.addToDo(toDo);
+        if(!authentication.isAuthenticated()){
+            throw new UsernameNotFoundException("user not found");
+        }
+        toDoService.addToDo(toDo, authentication.getName());
         toDoList.add(toDo);
         System.out.println("Todo List added successfully!");
         return toDoList;
@@ -48,9 +53,10 @@ public class ToDoController {
     }
 
     @DeleteMapping("/delete-todo")
-    public List<ToDo> deleteToDoList(@RequestParam Integer userId, @RequestParam String title){
+    public List<ToDo> deleteToDoList(@RequestParam Integer todoId){
+        toDoService.deleteToDo(todoId);
         for(int i=0;i<toDoList.size();i++){
-            if(userId.equals(toDoList.get(i).getUserId())   &&   title.equals(toDoList.get(i).getTitle())){
+            if(todoId.equals(toDoList.get(i).getId()) ){
                 toDoList.remove(i);
                 System.out.println("Successfully deleted todoList!");
                 break;

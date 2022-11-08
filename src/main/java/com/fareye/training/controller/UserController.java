@@ -25,7 +25,7 @@ public class UserController {
     }
 
     @PostMapping("/post-user")
-    public User createUser(@RequestBody  User user, BindingResult bindingResult){
+    public User createUser(@RequestBody User user, BindingResult bindingResult){
         if(bindingResult.hasErrors()){
             throw new IllegalArgumentException("illegal arguments");
         }

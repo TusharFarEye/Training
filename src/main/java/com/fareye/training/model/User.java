@@ -1,13 +1,13 @@
 package com.fareye.training.model;
 
+import com.fareye.training.service.UserService;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.mindrot.jbcrypt.BCrypt;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Getter @Setter @NoArgsConstructor
@@ -18,15 +18,12 @@ public class User {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String firstName;
-    @NotNull
     private String lastName;
     private String email;
     private boolean verified;
     private String created;
     private String modified;
-
     private String password;
-    private String hashedPassword;
     private String role;
     private boolean active;
 
@@ -34,7 +31,6 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
-        setHashedPassword();
         setCreated();
         setModified();
     }
@@ -50,14 +46,6 @@ public class User {
         this.modified = LocalDateTime.now().toString();
     }
 
-    public void setHashedPassword() {this.hashedPassword = hashPassword(this.password);}
-
-    // password hashing
-
-    private String hashPassword(String plainTextPassword){
-        return BCrypt.hashpw(plainTextPassword, BCrypt.gensalt());
-    }
-
     @Override
     public String toString() {
         return "User{" +
@@ -68,7 +56,6 @@ public class User {
                 ", created=" + created +
                 ", modified=" + modified +
                 ", password='" + password + '\'' +
-                ", hashedPassword='" + hashedPassword + '\'' +
                 ", role='" + role + '\'' +
                 ", active=" + active +
                 '}';

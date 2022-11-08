@@ -1,6 +1,6 @@
 package com.fareye.training.model;
 
-//import com.fareye.training.annotation.DuplicateTitle;
+import com.fareye.training.annotation.DuplicateTitle;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,7 +11,7 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Getter @Setter @NoArgsConstructor
-//@DuplicateTitle
+@DuplicateTitle
 @Data
 @Entity
 @Table(name = "todos")
@@ -19,12 +19,12 @@ public class ToDo {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private LocalDateTime dueDate;
-    private LocalDateTime createdDate;
-    private LocalDateTime modifiedDate;
+    private String dueDate;
+    private String createdDate;
+    private String modifiedDate;
     private String body;
     private String title;
-    private boolean status;
+    private String status;
     private Integer userId;
     public void setBody(String _body) {
         body = _body;
@@ -32,19 +32,15 @@ public class ToDo {
         setModifiedDate();
     }
 
-    public void setDueDate(LocalDateTime dueDate) {
-        this.dueDate = dueDate;
-    }
-
     public void setCreatedDate() {
         if(this.createdDate==null){
             LocalDateTime createdDate= LocalDateTime.now();
-            this.createdDate = createdDate;
+            this.createdDate = createdDate.toString();
         }
     }
     public void setModifiedDate() {
         LocalDateTime modifiedDate= LocalDateTime.now();
-        this.modifiedDate = modifiedDate;
+        this.modifiedDate = modifiedDate.toString();
     }
 
     @Override
